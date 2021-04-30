@@ -18,8 +18,8 @@ const mongoose = require('mongoose');
 class MyClient extends AkairoClient {
 	constructor() {
 		super(
-			{
-				ownerID: '488699894023061516',
+			{ /*Discord Bot's Owner Id - 649999259193573399*/
+				ownerID: '649999259193573399',
 			},
 			{
 				disableMentions: 'everyone',
@@ -91,3 +91,4 @@ class MyClient extends AkairoClient {
 
 const client = new MyClient();
 client.login();
+//PASS488699894023061516
