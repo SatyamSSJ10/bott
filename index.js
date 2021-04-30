@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send('Your bot is online on Replit.com'));
 
 app.listen(port, () =>
 	console.log(`Example app listening at http://localhost:${port}`),
@@ -15,6 +15,9 @@ const {
 } = require('discord-akairo');
 require('dotenv').config();
 const mongoose = require('mongoose');
+/*const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');*/
+
 class MyClient extends AkairoClient {
 	constructor() {
 		super(
@@ -27,7 +30,8 @@ class MyClient extends AkairoClient {
 		);
 		this.commandHandler = new CommandHandler(this, {
 			directory: './src/commands',
-			prefix: 's!',
+			//prefix: 's!',
+			prefix: '',
 			automateCategories: true,
 			allowMention: true,
 			blockBots: true,
@@ -35,7 +39,7 @@ class MyClient extends AkairoClient {
 		});
 		this.commandHandler.handle = async function (message) {
 			if (
-				!(await this.client.db.hdBlacklists.findOne({
+				!(await this.client.db.ssBlacklists.findOne({
 					channel_id: message.channel.id,
 				}))
 			)
@@ -55,7 +59,9 @@ class MyClient extends AkairoClient {
 
 		mongoose
 			.connect(
-				'mongodb+srv://zyla:6931528Erencan34@ganyu.nvee0.mongodb.net/GanyuBot_Database?retryWrites=true&w=majority',
+				//'mongodb+srv://zyla:6931528Erencan34@ganyu.nvee0.mongodb.net/GanyuBot_Database?retryWrites=true&w=majority',
+			//process.env.MONGOOSE_URL,
+			process.env.MONGODB,
 				{
 					useNewUrlParser: true,
 					useUnifiedTopology: true,
@@ -65,8 +71,8 @@ class MyClient extends AkairoClient {
 			.then(() => console.log('Connected to the database!'));
 
 		this.db = {
-			hdWarns: mongoose.model(
-				'hdWarns',
+			ssWarns: mongoose.model(
+				'ssWarns',
 				new mongoose.Schema({
 					_id: mongoose.Schema.Types.ObjectId,
 					warnedStaff: String,
@@ -75,15 +81,15 @@ class MyClient extends AkairoClient {
 					when: Date,
 				}),
 
-				'hdWarns',
+				'ssWarns',
 			),
-			hdBlacklists: mongoose.model(
-				'hdBlacklists',
+			ssBlacklists: mongoose.model(
+				'ssBlacklists',
 				new mongoose.Schema({
 					channel_id: String,
 					blacklistedBy: String,
 				}),
-				'hdBlacklists',
+				'ssBlacklists',
 			),
 		};
 	}
